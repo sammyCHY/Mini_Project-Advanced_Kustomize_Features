@@ -1,0 +1,180 @@
+# Mini-Project Advanced Kustomize Features
+
+## Advanced Kustomize Features.
+
+Let's dive deeper into each lesson, adding more detailed steps and explanatory code comments for better understanding.
+
+### Introduction to Advanced Kustomize Features
+
+Welcome to the advanced section of our Kustomize course, where we explore overlays for managing different kubernetes environments, utilize transformers and generators for resource customization, and handle sensitive data with secrets and ConfigMaps. This module is designed to elevate your skills in Kubernetes configuration management, preparing you for complex and real-world scenarios.
+
+
+### The Importance of Advanced Kustomize Features: An Analogy.
+
+Think of kustomize as an artist's toolkit when painting different versions of a masterpiece for various clients. Each client requires a unique adaptation, similar to how different environments (development, staging, production) in Kubernetes need specific configurations. Overlays allow for these tailored adjustments, transformers and generators act as your fine tools for detailed modifications, and managing secrets and ConfigMaps is akin to protecting the unique, sensitive elements of your art. This advanced section empowers you to craft and secure Kubernetes configurations with precision and flexibility, an essential skill for any Kubernetes practitioner.
+
+
+## Pre-requisites
+
+1. Basic Understanding of Kubernetes:
+
+    - Description: Knowledge of Kubernetes concepts and objects.
+    - Resource: [Kubernetes Basics](https://kubernetes.io/docs/tutorials/kubernetes-basics/).
+
+2. Kubernetes Installation:
+
+    - Description: Essential for customizing Kubernetes configurations.
+    - Installation Guide: [Install kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+    - Documentation: [kustomize GitHub Repository](https://github.com/kubernetes-sigs/kustomize)
+
+
+3.  Docker Installation:
+
+    - Description: Required for running containerized applications.
+    - Installation Guide: [Install Docker](https://docs.docker.com/get-started/get-docker/).
+    - Documentation: [Docker Documentation](https://docs.docker.com/).
+
+
+4. Kubernetes Command-Line Tool (kubectl):
+
+    - Description: Needed to interact with the Kubernetes cluster.
+    - Installation Guide: [Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/).
+    - Documentation: [kubectl Overview](https://kubernetes.io/docs/reference/kubectl/)
+
+
+5.  AWS CLI Installation:
+
+    - Description: The AWS Command Line Interface is required to manage AWS services.
+    - Installation Guide: [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html).
+    - Documentation: [AWS CLI Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html).
+
+
+6. `eksctl  Tool Installation:
+
+    - Description: A simple CLI tool for creating and managing clusters on EKS.
+    - Installing Guide: [Installing eksctl](https://docs.aws.amazon.com/eks/latest/userguide/setting-up.html).
+    - Documentation: [`eksctl` GitHub Repository](https://github.com/eksctl-io/eksctl).
+
+
+7.  AWS Account and IAM Permissions:
+
+    - Description: An AWS account with necessary IAM permissions to create and manage EKS clusters.
+    - Resource: [AWS Management Console](https://aws.amazon.com/console/).
+
+
+8.   Code Editor:
+
+     - Description: A text editor for writing and editing YAML files.
+     - Recommended Editor: [Visual Studio Code](https://code.visualstudio.com/).
+     - Extensions: Kubernetes and YAML extensions.
+
+
+9.   Internet Connection:
+
+    - Description: Needed for downloading tools and accessing AWS services.
+
+
+10. A Computer with Adequate Resources:
+
+    - Description: Ensure your computer can handle running the necessary tools and applications.
+
+
+
+### Lesson 3.1: Working with Overlays.
+
+  **Objective:** Master the use of overlays in Kustomize for different environmental configurations.
+
+  Detailed steps with Comments:
+
+1. Creating Environment-Specific Directories:
+
+    - In your project's `overlays` directory, create subdirectories for each environment.
+    - Example: Run `mkdir -p overlays/{dev,staging,prod}` in your terminal to create directories for development, staging, and production environments.
+
+
+2.   Setting Up Environment Configurations:
+
+     - Each environment will have its own `kustomization.yaml` file to specify unique customizations.
+
+     - Inside `overlays/dev/kustomization.yaml`, you might specify development-specific settings.
+
+```
+# overlays/dev/kustomization.yaml
+bases:
+- ../../base       # Relative path to the base directory
+patchesStrategicMerge:
+- replica_count_dev.yaml  # Patch file to merge with the base
+```
+
+  - `replica_count_dev.yaml` can be used to alter the number of replicas in the development environment.
+
+
+3. Applying Overlays for Each Environment:
+
+    - Use Kustomize to apply configurations for a specific environment.
+    - Command: `kubectl apply -k overlays/dev/` to deploy the development configuration.
+
+
+### Lesson 3.2: Transformers and Generators
+
+**Objective:** Learn to use transformers and generators for resources customization.
+
+Detailed Steps with Comments:
+
+ 1. Customizing Labels fo Production Environment:
+
+    - In `overlays/prod/kustomization.yaml`, use `commonLabels` to add labels to all resources for easy identification.
+
+```
+# overlays/prod/kustomization.yaml
+commonLabels:
+  env: production  # Label applied to every resource
+```
+
+ 2. Implementing Name Prefixes:
+
+    - Adding a prefix to resource name helps in distinguishing resources across different environments.
+
+```
+namePrefix: prod-  # Prefix added to the name of all resources
+```
+
+## Lesson 3.3 Secret and ConfigMap Management
+
+Objective: Effectively manage configuration data and secrets.
+
+### Detailed Steps with Comments:
+
+1. Generating a ConfigMap:
+
+      - In the base `kustomization.yaml` use configMapGenerator` to create a ConfigMap from literal values.
+
+```
+# base/kustomization.yaml
+configMapGenerator:
+- name: my-configmap  # Name of the ConfigMap
+  literals:
+  - key1=value1       # Key-value pairs
+  - key2=value2
+```
+
+2.   Creating Secrets Safety:
+
+     - Use `secretGenerator` to generate secrets. Ensure sensitive data like passwords are encoded or externally managed.
+
+```
+# base/kustomization.yaml
+secretGenerator:
+- name: my-secret     # Name of the Secret
+  literals:
+  - username=admin    # Key-value pairs; consider external management for real secrets
+  - password=s3cr3t
+```
+
+   - Note: For actual projects, use secure methods to inject these values, like environment variables or secret management tools.
+
+
+3. Applying Configurations:
+
+    - Deploy these configurations as part of your base or specific overlays depending on the use case.
+    
