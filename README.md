@@ -6,7 +6,7 @@ Let's dive deeper into each lesson, adding more detailed steps and explanatory c
 
 ### Introduction to Advanced Kustomize Features
 
-Welcome to the advanced section of our Kustomize course, where we explore overlays for managing different kubernetes environments, utilize transformers and generators for resource customization, and handle sensitive data with secrets and ConfigMaps. This module is designed to elevate your skills in Kubernetes configuration management, preparing you for complex and real-world scenarios.
+Welcome to the advanced section of our Kustomize course, where we explore overlays for managing different kubernetes environments, utilize transformers and generators for resource Kustomization, and handle sensitive data with secrets and ConfigMaps. This module is designed to elevate your skills in Kubernetes configuration management, preparing you for complex and real-world scenarios.
 
 
 ### The Importance of Advanced Kustomize Features: An Analogy.
@@ -53,7 +53,7 @@ Think of kustomize as an artist's toolkit when painting different versions of a 
 
     - Description: A simple CLI tool for creating and managing clusters on EKS.
     - Installing Guide: [Installing eksctl](https://docs.aws.amazon.com/eks/latest/userguide/setting-up.html).
-    - Documentation: [`eksctl` GitHub Repository](https://github.com/eksctl-io/eksctl).
+    - Documentation: [eksctl GitHub Repository](https://github.com/eksctl-io/eksctl).
 
 
 7.  AWS Account and IAM Permissions:
@@ -94,7 +94,7 @@ Think of kustomize as an artist's toolkit when painting different versions of a 
 
 2.   Setting Up Environment Configurations:
 
-     - Each environment will have its own `kustomization.yaml` file to specify unique customizations.
+     - Each environment will have its own `kustomization.yaml` file to specify unique ustomizations.
 
      - Inside `overlays/dev/kustomization.yaml`, you might specify development-specific settings.
 
@@ -117,7 +117,7 @@ patchesStrategicMerge:
 
 ### Lesson 3.2: Transformers and Generators
 
-**Objective:** Learn to use transformers and generators for resources customization.
+**Objective:** Learn to use transformers and generators for resources kustomization.
 
 Detailed Steps with Comments:
 
