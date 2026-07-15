@@ -1,0 +1,10 @@
+resources:
+- ../../base
+
+patchesStrategicMerge:
+- replica_count_prod.yaml
+
+commonLabels:
+  env: production
+
+namePrefix: prod-

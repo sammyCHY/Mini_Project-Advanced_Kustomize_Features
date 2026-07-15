@@ -1,0 +1,5 @@
+resources:
+- ../../base
+
+patchesStrategicMerge:
+- replica_count_dev.yaml

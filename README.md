@@ -34,6 +34,8 @@ Think of kustomize as an artist's toolkit when painting different versions of a 
     - Installation Guide: [Install Docker](https://docs.docker.com/get-started/get-docker/).
     - Documentation: [Docker Documentation](https://docs.docker.com/).
 
+I already have Docker Desktop for this.
+
 
 4. Kubernetes Command-Line Tool (kubectl):
 
@@ -48,12 +50,35 @@ Think of kustomize as an artist's toolkit when painting different versions of a 
     - Installation Guide: [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html).
     - Documentation: [AWS CLI Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html).
 
+    ![The Image here shows the aws configure](image/aws-configure-png)
 
 6. `eksctl  Tool Installation:
 
     - Description: A simple CLI tool for creating and managing clusters on EKS.
     - Installing Guide: [Installing eksctl](https://docs.aws.amazon.com/eks/latest/userguide/setting-up.html).
     - Documentation: [eksctl GitHub Repository](https://github.com/eksctl-io/eksctl).
+
+The command below is for creation of EKSCluster with two Worker nodes.
+
+```
+eksctl create cluster \
+  --name kustomize-cluster \
+  --region us-east-1 \
+  --version 1.34 \
+  --nodes 2 \
+  --node-type t3.medium \
+  --managed
+```
+![The Image below shows the eks cluster created](image/eks-cluster-created.png)
+
+
+![The Image below shows the eks cluster created](image/eks-cluster-created1.png)
+
+
+![The Image below shows the eks cluster created view](image/eks-cluster-view.png)
+
+
+![The Image below shows the eks cluster created](image/eks-cluster-view-nodes.png)
 
 
 7.  AWS Account and IAM Permissions:
@@ -86,6 +111,22 @@ Think of kustomize as an artist's toolkit when painting different versions of a 
 
   Detailed steps with Comments:
 
+  *********************
+  The Image of the project structure.
+
+  ```
+  my-kustomize-project/
+│
+├── base/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── kustomization.yaml
+│
+└── overlays/
+    ├── dev/
+    ├── staging/
+    └── prod/
+```
 1. Creating Environment-Specific Directories:
 
     - In your project's `overlays` directory, create subdirectories for each environment.
@@ -94,7 +135,7 @@ Think of kustomize as an artist's toolkit when painting different versions of a 
 
 2.   Setting Up Environment Configurations:
 
-     - Each environment will have its own `kustomization.yaml` file to specify unique ustomizations.
+     - Each environment will have its own `kustomization.yaml` file to specify unique customizations.
 
      - Inside `overlays/dev/kustomization.yaml`, you might specify development-specific settings.
 
@@ -113,6 +154,16 @@ patchesStrategicMerge:
 
     - Use Kustomize to apply configurations for a specific environment.
     - Command: `kubectl apply -k overlays/dev/` to deploy the development configuration.
+
+![The Image below shows the overlay dev deployment](image/kubectl-apply-overlay-dev.png)
+
+
+
+![The Image below shows the overlay staging deployment](image/kubectl-apply-overlay-staging.png)
+
+
+
+ ![The Image below shows the overlay prod deployment](image/kubectl-apply-overlay-prod.png)
 
 
 ### Lesson 3.2: Transformers and Generators
@@ -178,3 +229,56 @@ secretGenerator:
 
     - Deploy these configurations as part of your base or specific overlays depending on the use case.
     
+The Final Project Structure suppose to look like this below.
+
+```
+my-kustomize-project/
+│
+├── base/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── kustomization.yaml
+│
+└── overlays/
+    ├── dev/
+    │   ├── kustomization.yaml
+    │   └── replica_count_dev.yaml
+    │
+    ├── staging/
+    │   ├── kustomization.yaml
+    │   └── replica_count_staging.yaml
+    │
+    └── prod/
+        ├── kustomization.yaml
+        └── replica_count_prod.yaml
+```
+
+After the configuration, then use the command below to deploy to the EKS clusters.
+
+- For Development (Dev)
+
+`kubectl apply -k overlays/dev`
+
+- Staging
+
+`kubectl apply -k overlays/staging `
+
+- Production  (Prod)
+
+`kubectl apply -k overlays/prod`
+
+
+The command below shows all the running pods in the nodes after deployment.
+
+![The Image shows all the running Pods](image/deployment-running-pods.png)
+
+
+Use the thess command below to delete your eks cluster after use.
+
+```
+eksctl delete cluster \
+  --name kustomize-cluster \
+  --region us-east-1
+```
+
+![Image shows the running eks cluster in aws](image/eks-kustomize-cluster-created.png)

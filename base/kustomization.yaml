@@ -1,0 +1,15 @@
+resources:
+- deployment.yaml
+- service.yaml
+
+configMapGenerator:
+- name: my-configmap
+  literals:
+  - key1=value1
+  - key2=value2
+
+secretGenerator:
+- name: my-secret
+  literals:
+  - username=admin
+  - password=Sammylin7742#
